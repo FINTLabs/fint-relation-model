@@ -1,4 +1,4 @@
-package no.fint.model.relation;
+package no.fintlabs.model.relation;
 
 import lombok.Data;
 

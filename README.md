@@ -9,11 +9,11 @@
 ```groovy
 repositories {
     maven {
-        url  "http://dl.bintray.com/fint/maven" 
+        url  "http://repo.fintlabs.no/releases" 
     }
 }
 
-compile('no.fint:fint-relation-model:1.0.7')
+implementation 'no.fintlabs:fint-relation-model:2.0.0'
 ```
 
 ## Usage
