@@ -13,10 +13,10 @@ sourceCompatibility = 1.8
 
 repositories {
     mavenLocal()
-    jcenter()
     maven {
         url 'https://repo.fintlabs.no/releases'
     }
+    mavenCentral()
 }
 
 apply from: 'https://raw.githubusercontent.com/FINTlibs/fint-buildscripts/v1.2.0/dependencies.gradle'
@@ -52,4 +52,4 @@ jacocoTestReport {
     }
 }
 
-apply from: 'https://raw.githubusercontent.com/FINTLabs/fint-buildscripts/master/reposilite.gradle'
+apply from: 'https://raw.githubusercontent.com/FINTLabs/fint-buildscripts/master/reposilite.ga.gradle'
