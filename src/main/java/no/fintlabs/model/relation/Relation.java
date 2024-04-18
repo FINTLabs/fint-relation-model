@@ -78,6 +78,6 @@ public class Relation implements Serializable {
 
     public static String createType(String type) {
         String name = type.toLowerCase();
-        return name.replace("no.fint.model.", "");
+        return name.replace("no.fintlabs.model.", "");
     }
 }
