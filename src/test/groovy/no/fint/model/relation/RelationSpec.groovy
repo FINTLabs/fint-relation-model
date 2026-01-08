@@ -1,6 +1,8 @@
 package no.fint.model.relation
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import no.novari.fint.model.relation.TestDto
+import no.novari.fint.model.relation.TestDto2
 import spock.lang.Specification
 
 class RelationSpec extends Specification {
@@ -42,7 +44,7 @@ class RelationSpec extends Specification {
 
     def "Create type with a FINT package structure"() {
         when:
-        def type = Relation.createType('no.fint.model.test.TestDto')
+        def type = Relation.createType('no.novari.fint.model.test.TestDto')
 
         then:
         type == 'test.testdto'
