@@ -1,8 +1,6 @@
-package no.fint.model.relation
+package no.novari.fint.model.relation
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import no.novari.fint.model.relation.TestDto
-import no.novari.fint.model.relation.TestDto2
 import spock.lang.Specification
 
 class RelationSpec extends Specification {
