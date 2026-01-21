@@ -10,6 +10,8 @@ apply plugin: 'maven-publish'
 apply plugin: 'jacoco'
 
 group 'no.novari'
+version = project.findProperty("version") ?: "0.0.1-SNAPSHOT"
+
 sourceCompatibility = 1.8
 
 repositories {
@@ -53,24 +55,19 @@ jacocoTestReport {
     }
 }
 
-if (project.hasProperty('reposiliteUsername') && project.hasProperty('reposiliteToken')) {
-    publishing {
-        repositories {
-            maven {
-                url "https://repo.fintlabs.no/releases"
-                credentials {
-                    username = reposiliteUsername
-                    password = reposiliteToken
-                }
-                authentication {
-                    basic(BasicAuthentication)
-                }
+publishing {
+    repositories {
+        maven {
+            url = uri("https://repo.fintlabs.no/releases")
+            credentials {
+                username = System.getenv("REPOSILITE_USERNAME")
+                password = System.getenv("REPOSILITE_PASSWORD")
             }
         }
-        publications {
-            maven(MavenPublication) {
-                from(components.java)
-            }
+    }
+    publications {
+        maven(MavenPublication) {
+            from components.java
         }
     }
 }
