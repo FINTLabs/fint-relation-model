@@ -1,4 +1,4 @@
-package no.fint.model.relation;
+package no.novari.fint.model.relation;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
@@ -78,6 +78,6 @@ public class Relation implements Serializable {
 
     public static String createType(String type) {
         String name = type.toLowerCase();
-        return name.replace("no.fint.model.", "");
+        return name.replace("no.novari.fint.model.", "");
     }
 }

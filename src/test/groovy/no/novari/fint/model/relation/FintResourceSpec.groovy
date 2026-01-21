@@ -1,4 +1,4 @@
-package no.fint.model.relation
+package no.novari.fint.model.relation
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import spock.lang.Specification
