@@ -9,6 +9,7 @@ apply plugin: 'maven'
 apply plugin: 'maven-publish'
 apply plugin: 'jacoco'
 
+group 'no.novari'
 sourceCompatibility = 1.8
 
 repositories {
@@ -52,4 +53,24 @@ jacocoTestReport {
     }
 }
 
-apply from: 'https://raw.githubusercontent.com/FINTLabs/fint-buildscripts/master/reposilite.gradle'
+if (project.hasProperty('reposiliteUsername') && project.hasProperty('reposiliteToken')) {
+    publishing {
+        repositories {
+            maven {
+                url "https://repo.fintlabs.no/releases"
+                credentials {
+                    username = reposiliteUsername
+                    password = reposiliteToken
+                }
+                authentication {
+                    basic(BasicAuthentication)
+                }
+            }
+        }
+        publications {
+            maven(MavenPublication) {
+                from(components.java)
+            }
+        }
+    }
+}
