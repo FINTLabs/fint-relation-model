@@ -1,55 +1,105 @@
 plugins {
-    id 'com.github.kt3k.coveralls' version '2.8.1'
-    id 'com.github.ben-manes.versions' version '0.15.0'
+    id 'java-library'
+    id 'groovy'
+    id 'maven-publish'
+    id 'jacoco'
 }
 
-apply plugin: 'groovy'
-apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'maven-publish'
-apply plugin: 'jacoco'
+group = 'no.fint'
 
-sourceCompatibility = 1.8
+def springBootVersion = '4.1.2'
+def lombokVersion = '1.18.48'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+    withSourcesJar()
+    withJavadocJar()
+}
 
 repositories {
-    mavenLocal()
-    jcenter()
-    maven {
-        url 'https://repo.fintlabs.no/releases'
-    }
+    mavenCentral()
 }
 
-apply from: 'https://raw.githubusercontent.com/FINTlibs/fint-buildscripts/v1.2.0/dependencies.gradle'
 dependencies {
-    compile("org.projectlombok:lombok:${lombokVersion}")
-    compile('com.fasterxml.jackson.core:jackson-annotations:2.8.8')
-    compile('com.fasterxml.jackson.core:jackson-databind:2.8.8')
+    api 'com.fasterxml.jackson.core:jackson-annotations:2.21'
 
-    testCompile("org.spockframework:spock-core:${spockSpringVersion}")
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
+    testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
+    testImplementation platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}")
+    testImplementation 'org.spockframework:spock-core:2.5-groovy-5.0'
+    testImplementation 'org.springframework.boot:spring-boot-starter-jackson'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
-javadoc {
-    source = sourceSets.main.allJava
-    classpath = configurations.compile
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 25
+}
+
+tasks.withType(GroovyCompile).configureEach {
+    groovyOptions.encoding = 'UTF-8'
+}
+
+tasks.named('javadoc', Javadoc) {
+    options.encoding = 'UTF-8'
     options.windowTitle = 'FINT Relation Model'
-    destinationDir = file('./javadocs/')
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = gradleVersion
-}
-
-
-test {
+tasks.named('test', Test) {
+    useJUnitPlatform()
     testLogging {
         events 'passed', 'skipped', 'failed'
     }
 }
 
-jacocoTestReport {
+jacoco {
+    toolVersion = '0.8.16'
+}
+
+tasks.named('jacocoTestReport', JacocoReport) {
+    dependsOn tasks.named('test')
     reports {
-        xml.enabled true
+        xml.required = true
+        html.required = true
     }
 }
 
-apply from: 'https://raw.githubusercontent.com/FINTLabs/fint-buildscripts/master/reposilite.gradle'
+tasks.named('jacocoTestCoverageVerification', JacocoCoverageVerification) {
+    dependsOn tasks.named('jacocoTestReport')
+    violationRules {
+        rule {
+            limit {
+                counter = 'INSTRUCTION'
+                minimum = 0.90
+            }
+            limit {
+                counter = 'BRANCH'
+                minimum = 0.90
+            }
+        }
+    }
+}
+
+tasks.named('check') {
+    dependsOn tasks.named('jacocoTestCoverageVerification')
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            name = 'reposilite'
+            url = uri('https://repo.fintlabs.no/releases')
+            credentials(PasswordCredentials)
+        }
+    }
+}

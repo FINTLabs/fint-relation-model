@@ -1,8 +1,5 @@
-language: java
-jdk:
- - oraclejdk8
-install: true
+language: minimal
+services:
+ - docker
 script:
- ./gradlew build
-after_success:
- - ./gradlew jacocoTestReport coveralls
+ - docker run --rm -v "$TRAVIS_BUILD_DIR:/workspace" -w /workspace eclipse-temurin:25-jdk ./gradlew --no-daemon clean build --warning-mode=fail
