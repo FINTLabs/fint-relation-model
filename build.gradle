@@ -7,7 +7,7 @@ plugins {
 
 group = 'no.fint'
 
-def springBootVersion = '4.1.2'
+def springBootVersion = '4.2.0'
 def lombokVersion = '1.18.48'
 
 java {
